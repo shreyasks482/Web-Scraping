@@ -17,8 +17,8 @@ for i in range(1, 21):
     url = f"https://www.amazon.in/s?k=bags&crid=2M096C61O4MLT&qid=1653308124&sprefix=ba%2Caps%2C283&page={i}"
     while True:
         try:
-            responsed = requests.get(url)
-            responsed.raise_for_status()
+            responses = requests.get(url)
+            responses.raise_for_status()
 
         except requests.exceptions.HTTPError as e:
             print(e)
@@ -30,7 +30,7 @@ for i in range(1, 21):
             time.sleep(1)
 
         else:
-            response = responsed.text
+            response = responses.text
 
             soup = BeautifulSoup(response, "html.parser")
 
@@ -76,10 +76,10 @@ for i in range(1, 21):
 
                     else:
                         a = 0
-                        producted = BeautifulSoup(pro_response.text, 'html.parser')
+                        get_product = BeautifulSoup(pro_response.text, 'html.parser')
                         try:
-                            info = producted.find(id="productDetails_techSpec_section_1")
-                            additional_info = producted.find(id="productDetails_detailBullets_sections1")
+                            info = get_product.find(id="productDetails_techSpec_section_1")
+                            additional_info = get_product.find(id="productDetails_detailBullets_sections1")
 
                             try:
                                 get_manufacturer = info.find('th', text=" Manufacturer ")
@@ -137,7 +137,7 @@ for i in range(1, 21):
                             print(e)
                             print("next lined")
                             try:
-                                details = producted.find(id="detailBullets_feature_div")
+                                details = get_product.find(id="detailBullets_feature_div")
                                 try:
                                     get_manufacturer_name = details.find('span',
                                                                          text='Manufacturer\n                                    ‏\n                                        :\n                                    ‎\n                                ')
@@ -184,13 +184,12 @@ for i in range(1, 21):
                                     print("Generic name not provided")
                                     gen_name = "N/A"
 
-
                             except AttributeError as e:
                                 print(e)
                                 break
                             else:
                                 try:
-                                    description = producted.find('div', {'id': 'productDescription'}).find("span").text
+                                    description = get_product.find('div', {'id': 'productDescription'}).find("span").text
                                 except AttributeError:
                                     description = "N/A"
                                     print("No description provided")
@@ -198,11 +197,10 @@ for i in range(1, 21):
                                 else:
                                     break
 
-
                         else:
                             print("space one")
                             try:
-                                all_description = producted.find(id="aplus").find("h4").find_next_sibling(
+                                all_description = get_product.find(id="aplus").find("h4").find_next_sibling(
                                     'p').text.strip()
                                 description = all_description
                                 # for one_desc in all_description:
